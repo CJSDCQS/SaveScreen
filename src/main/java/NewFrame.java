@@ -15,9 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class NewFrame extends JFrame implements NativeKeyListener {
-    private static final long serialVersionUID = 1L;
+
     private Guide guide = null;
-    public boolean isShowGuide = false;
     private HashSet<Integer> keyStack = new HashSet<>();
 
     NewFrame() {
@@ -55,60 +54,103 @@ public class NewFrame extends JFrame implements NativeKeyListener {
             trayIcon.setImageAutoSize(true);
             try {
                 tray.add(trayIcon);
-                trayIcon.addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.isPopupTrigger()) {
-                            final JPopupMenu pop = new JPopupMenu();
-                            pop.setSize(100, 50);
-                            Font font = new Font(Font.SERIF, Font.PLAIN, 20);
-                            pop.setFont(font);
-                            JMenuItem m1 = new JMenuItem("使用说明");
-                            m1.setSize(100, 50);
-                            JMenuItem m2 = new JMenuItem("退出");
-                            m2.setSize(100, 50);
-                            m1.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    // 弹出教程说明
-                                    guide = Guide.getInstance();
-                                    guide.setVisible(true);
-                                }
-                            });
-                            m2.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    System.exit(0);
-                                }
-                            });
-                            pop.add(m1);
-                            pop.add(m2);
-                            pop.setLocation(e.getX(), e.getY() - pop.getSize().height);
-                            pop.setInvoker(pop);
-                            pop.setVisible(true);
-                        }
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                    }
-                });
+                trayIcon.addMouseListener(new TrayMouseListener());
             } catch (AWTException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private class TrayMouseListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopMenu(e);
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+
+        }
+    }
+
+    private void showPopMenu(MouseEvent e) {
+        final JPopupMenu pop = new JPopupMenu();
+        final int[] popSize = {100, 50};
+        final int[] globalE = {e.getX(), e.getY()};
+        pop.setSize(popSize[0], popSize[1]);
+        Font font = new Font(Font.SERIF, Font.PLAIN, 20);
+        JMenuItem m1 = new JMenuItem("使用说明");
+        m1.setSize(popSize[0], popSize[1] / 2);
+        m1.setFont(font);
+        JMenuItem m2 = new JMenuItem("退出");
+        m2.setSize(popSize[0], popSize[1] / 2);
+        m2.setFont(font);
+        m1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // 弹出教程说明
+                guide = Guide.getInstance();
+                guide.setVisible(true);
+            }
+        });
+        m2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+        pop.add(m1);
+        pop.add(m2);
+        pop.setLocation(globalE[0] - 10, globalE[1] - popSize[1]);
+        pop.setInvoker(pop);
+        pop.setVisible(true);
+        pop.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                int eX = e.getX();
+                int eY = e.getY();
+                if (!(eX > 0 && eX < popSize[0] && eY > 0 && eY < popSize[1])) {
+                    pop.setVisible(false);
+                }
+            }
+        });
     }
 
     @Override

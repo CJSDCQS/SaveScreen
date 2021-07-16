@@ -1,10 +1,3 @@
-import listener.GuideWindowListener;
-import org.jnativehook.GlobalScreen;
-import org.jnativehook.NativeHookException;
-import org.jnativehook.SwingDispatchService;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.NativeKeyListener;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 class ScreenFrame extends JFrame {
-    private static final long serialVersionUID = 2L;
+
     /*
      * 创建一个全屏的窗口，将全屏的图像放在JFrame的窗口上，以供来截屏。
      */
