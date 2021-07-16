@@ -1,8 +1,12 @@
+import org.apache.axis.encoding.Base64;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 class ScreenFrame extends JFrame {
@@ -82,6 +86,14 @@ class ScreenFrame extends JFrame {
                 file = new File("capture/" + na);
             }
             ImageIO.write(getImage, "bmp", file);
+
+            String base64;
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            ImageIO.write(getImage, "bmp", stream);
+            base64 = Base64.encode(stream.toByteArray());
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("data:image/jpg;base64," + base64), null);
+            stream.flush();
+            stream.close();
         }
 
         public void mousePressed(MouseEvent e) {

@@ -20,11 +20,12 @@ public class NewFrame extends JFrame implements NativeKeyListener {
     private HashSet<Integer> keyStack = new HashSet<>();
 
     NewFrame() {
-        setLayout(new FlowLayout());
         setBounds(1000, 600, 200, 200);
         setResizable(false);
         setUndecorated(true);
         setVisible(false);
+
+        showGuide();
 
         createSystemTray();
         initKeyListener();
@@ -106,9 +107,7 @@ public class NewFrame extends JFrame implements NativeKeyListener {
         m1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // 弹出教程说明
-                guide = Guide.getInstance();
-                guide.setVisible(true);
+                showGuide();
             }
         });
         m2.addActionListener(new ActionListener() {
@@ -151,6 +150,12 @@ public class NewFrame extends JFrame implements NativeKeyListener {
                 }
             }
         });
+    }
+
+    private void showGuide() {
+        // 弹出教程说明
+        guide = Guide.getInstance();
+        guide.setVisible(true);
     }
 
     @Override
