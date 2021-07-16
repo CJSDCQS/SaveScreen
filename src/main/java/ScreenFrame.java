@@ -16,7 +16,10 @@ class ScreenFrame extends JFrame {
      */
     Dimension di = Toolkit.getDefaultToolkit().getScreenSize();
 
-    ScreenFrame() {
+    private boolean isOpenNetRecord;
+
+    ScreenFrame(boolean isOpenNetRecord) {
+        this.isOpenNetRecord = isOpenNetRecord;
         //设置大小，即全屏
         setSize(di);
         //返回此窗体的 contentPane对象
@@ -24,7 +27,6 @@ class ScreenFrame extends JFrame {
     }
 
     class DrawRect extends JPanel implements MouseMotionListener, MouseListener {
-        private static final long serialVersionUID = 3L;
         /*
          * 将全屏的图像放在JPanel 上， 可以通过new DrawRect来获得JPanel，并且JPanel上有全屏图像
          */
@@ -94,6 +96,11 @@ class ScreenFrame extends JFrame {
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection("data:image/jpg;base64," + base64), null);
             stream.flush();
             stream.close();
+
+            if (isOpenNetRecord) {
+                // 提交图片到云端
+                System.out.println("提交云端");
+            }
         }
 
         public void mousePressed(MouseEvent e) {

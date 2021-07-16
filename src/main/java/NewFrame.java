@@ -18,6 +18,7 @@ public class NewFrame extends JFrame implements NativeKeyListener {
 
     private Guide guide = null;
     private HashSet<Integer> keyStack = new HashSet<>();
+    private boolean isOpenNetRecord = false;
 
     NewFrame() {
         setBounds(1000, 600, 200, 200);
@@ -101,9 +102,14 @@ public class NewFrame extends JFrame implements NativeKeyListener {
         JMenuItem m1 = new JMenuItem("使用说明");
         m1.setSize(popSize[0], popSize[1] / 2);
         m1.setFont(font);
-        JMenuItem m2 = new JMenuItem("退出");
+        JMenuItem m2 = new JMenuItem("退出应用");
         m2.setSize(popSize[0], popSize[1] / 2);
         m2.setFont(font);
+        JMenuItem m3 = new JMenuItem();
+        if (isOpenNetRecord) m3.setText("关闭云图片记录");
+        else m3.setText("启动云图片记录");
+        m3.setSize(popSize[0], popSize[1] / 2);
+        m3.setFont(font);
         m1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,15 +122,23 @@ public class NewFrame extends JFrame implements NativeKeyListener {
                 System.exit(0);
             }
         });
+        m3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isOpenNetRecord = !isOpenNetRecord;
+                if (isOpenNetRecord) m3.setText("关闭云图片记录");
+                else m3.setText("开启云图片记录");
+            }
+        });
         pop.add(m1);
+        pop.add(m3);
         pop.add(m2);
-        pop.setLocation(globalE[0] - 10, globalE[1] - popSize[1]);
+        pop.setLocation(globalE[0] - 4, globalE[1] - popSize[1] - 30);
         pop.setInvoker(pop);
         pop.setVisible(true);
         pop.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
             }
 
             @Override
@@ -174,7 +188,7 @@ public class NewFrame extends JFrame implements NativeKeyListener {
             boolean ctrl = keyStack.contains(29);
             boolean block = keyStack.contains(57);
             if (ctrl && block) {
-                ScreenFrame sf = new ScreenFrame();
+                ScreenFrame sf = new ScreenFrame(isOpenNetRecord);
                 sf.setAlwaysOnTop(true);
                 sf.setUndecorated(true);
                 sf.setVisible(true);
